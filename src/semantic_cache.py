@@ -1,3 +1,5 @@
+"""Custom cluster-aware semantic cache and cache metrics tracking."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

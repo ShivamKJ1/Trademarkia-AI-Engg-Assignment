@@ -1,3 +1,5 @@
+"""Text normalization helpers used before embedding generation."""
+
 from __future__ import annotations
 
 import re

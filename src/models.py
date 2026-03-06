@@ -1,3 +1,5 @@
+"""Pydantic request/response schemas for API contract definitions."""
+
 from __future__ import annotations
 
 from pydantic import BaseModel, Field

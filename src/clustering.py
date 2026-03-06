@@ -1,3 +1,5 @@
+"""Soft clustering component using Gaussian Mixture Models and silhouette selection."""
+
 from __future__ import annotations
 
 import logging

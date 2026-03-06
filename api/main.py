@@ -1,3 +1,5 @@
+"""FastAPI application entrypoint and startup/shutdown lifecycle wiring."""
+
 from __future__ import annotations
 
 import logging

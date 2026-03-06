@@ -1,3 +1,5 @@
+"""FAISS-backed vector index wrapper with metadata-aware similarity search."""
+
 from __future__ import annotations
 
 import logging

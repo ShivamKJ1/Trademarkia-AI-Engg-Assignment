@@ -1,3 +1,5 @@
+"""End-to-end query pipeline orchestrator for embeddings, clustering, cache, and FAISS."""
+
 from __future__ import annotations
 
 import logging

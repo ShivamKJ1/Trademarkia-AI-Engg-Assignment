@@ -1,3 +1,5 @@
+"""HTTP route handlers for query execution and semantic cache operations."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Request

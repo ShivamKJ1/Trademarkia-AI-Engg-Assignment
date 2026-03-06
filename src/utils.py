@@ -1,3 +1,5 @@
+"""Shared utility helpers for logging setup, filesystem, and JSON I/O."""
+
 from __future__ import annotations
 
 import json

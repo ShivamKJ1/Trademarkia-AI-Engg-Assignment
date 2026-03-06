@@ -1,3 +1,5 @@
+"""Embedding service for model loading, device selection, and vector persistence."""
+
 from __future__ import annotations
 
 import logging

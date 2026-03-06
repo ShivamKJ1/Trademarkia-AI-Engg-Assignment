@@ -1,3 +1,5 @@
+"""Application configuration and artifact path definitions loaded from environment."""
+
 from __future__ import annotations
 
 import os

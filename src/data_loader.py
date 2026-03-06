@@ -1,3 +1,5 @@
+"""Dataset ingestion utilities for loading and shaping 20 Newsgroups documents."""
+
 from __future__ import annotations
 
 import logging
