@@ -11,6 +11,12 @@ load_dotenv()
 
 @dataclass(frozen=True)
 class Settings:
+    """
+    Centralized, environment-driven configuration.
+
+    Keeping all tunables here avoids hardcoded values spread across modules.
+    """
+
     app_name: str = os.getenv("APP_NAME", "Trademarkia Semantic Search API")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
 
@@ -32,26 +38,32 @@ class Settings:
 
     @property
     def embeddings_path(self) -> Path:
+        """Path for persisted document embeddings."""
         return self.artifact_dir / "embeddings.npy"
 
     @property
     def metadata_path(self) -> Path:
+        """Path for metadata aligned with FAISS vector order."""
         return self.artifact_dir / "documents.pkl"
 
     @property
     def faiss_index_path(self) -> Path:
+        """Path for serialized FAISS index."""
         return self.artifact_dir / "faiss.index"
 
     @property
     def cluster_model_path(self) -> Path:
+        """Path for persisted GaussianMixture model."""
         return self.artifact_dir / "gmm.pkl"
 
     @property
     def cluster_probabilities_path(self) -> Path:
+        """Path for per-document cluster probability distributions."""
         return self.artifact_dir / "cluster_probabilities.npy"
 
     @property
     def cluster_labels_path(self) -> Path:
+        """Path for dominant hard labels derived from GMM."""
         return self.artifact_dir / "cluster_labels.npy"
 
 

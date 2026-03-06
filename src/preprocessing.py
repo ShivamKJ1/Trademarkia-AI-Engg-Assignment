@@ -23,4 +23,5 @@ def basic_clean_text(text: str) -> str:
 
 
 def preprocess_texts(texts: Iterable[str]) -> List[str]:
+    """Apply basic cleaner to each document in ingestion order."""
     return [basic_clean_text(t) for t in texts]

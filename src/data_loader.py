@@ -23,6 +23,7 @@ def load_newsgroups_dataset() -> pd.DataFrame:
         remove=("headers", "footers", "quotes"),
     )
 
+    # Text normalization is kept intentionally lightweight to preserve meaning.
     cleaned_text = preprocess_texts(dataset.data)
     df = pd.DataFrame(
         {
@@ -33,6 +34,7 @@ def load_newsgroups_dataset() -> pd.DataFrame:
         }
     )
 
+    # Drop fully empty documents after cleanup and reindex ids to stay contiguous.
     df = df[df["text"].str.len() > 0].reset_index(drop=True)
     df["doc_id"] = range(len(df))
 
