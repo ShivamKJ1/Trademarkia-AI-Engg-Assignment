@@ -215,7 +215,7 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8010/query" -Method Post -ContentType "
 Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache/stats" -Method Get
 
 #6. Clear cache
-Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache" -Me
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache" -Method Delete
 
 #7. Verify reset
 Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache/stats" -Method Get
