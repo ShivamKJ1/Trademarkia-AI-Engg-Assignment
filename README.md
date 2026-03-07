@@ -117,7 +117,7 @@ project_root/
 5. On hit: return cached response with similarity and matched query
 6. On miss: run FAISS top-k search, format response, insert into cache
 
-## One-Page Execution Flowchart
+## Execution Flowchart
 
 ```text
                            FASTAPI PROCESS START
