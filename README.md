@@ -149,12 +149,18 @@ Open:
 
 ## API Usage
 
+### Show that API is reachable in Terminal 2
+
+```bash 
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache/stats" -Method Get
+```
+
 ### 1) Query
 
-```bash
-curl -X POST "http://127.0.0.1:8010/query" \
-  -H "Content-Type: application/json" \
-  -d "{\"query\":\"How do I install Linux on my PC?\"}"
+```bash 
+$body1 = @{ query = "How can I install Linux on my PC?" } | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/query" -Method Post -ContentType "application/json" -Body $body1
+
 ```
 
 Sample response:
@@ -194,22 +200,25 @@ uvicorn api.main:app --reload --port 8010
 In a second terminal:
 
 ```bash
-# 2) First query (expected cache miss)
-curl -X POST "http://127.0.0.1:8010/query" \
-  -H "Content-Type: application/json" \
-  -d "{\"query\":\"How can I install Linux on a PC?\"}"
+#2. Show API is reachable (Terminal 2)
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache/stats" -Method Get
 
-# 3) Similar query (often cache hit due to semantic similarity threshold)
-curl -X POST "http://127.0.0.1:8010/query" \
-  -H "Content-Type: application/json" \
-  -d "{\"query\":\"How do I install Linux on my computer?\"}"
+#3. First query (expected cache miss)
+$body1 = @{ query = "How can I install Linux on my PC?" } | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/query" -Method Post -ContentType "application/json" -Body $body1
 
-# 4) Check cache metrics
-curl "http://127.0.0.1:8010/cache/stats"
+#4. Similar query (show semantic cache behavior)
+$body2 = @{ query = "How do I install Linux on my computer?" } | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/query" -Method Post -ContentType "application/json" -Body $body2
 
-# 5) Clear cache and verify reset
-curl -X DELETE "http://127.0.0.1:8010/cache"
-curl "http://127.0.0.1:8010/cache/stats"
+#5. Show cache stats
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache/stats" -Method Get
+
+#6. Clear cache
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache" -Me
+
+#7. Verify reset
+Invoke-RestMethod -Uri "http://127.0.0.1:8010/cache/stats" -Method Get
 ```
 
 ## Docker
