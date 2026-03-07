@@ -117,6 +117,86 @@ project_root/
 5. On hit: return cached response with similarity and matched query
 6. On miss: run FAISS top-k search, format response, insert into cache
 
+## One-Page Execution Flowchart
+
+```text
+                           FASTAPI PROCESS START
+                                     |
+                                     v
+                     +-----------------------------------+
+                     | api/main.py lifespan startup      |
+                     | create SearchEngine + initialize  |
+                     +----------------+------------------+
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | src/config.py                     |
+                     | load .env and artifact paths      |
+                     +----------------+------------------+
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | src/search_engine.py initialize() |
+                     +----------------+------------------+
+                                      |
+          +---------------------------+---------------------------+
+          |                           |                           |
+          v                           v                           v
++----------------------+   +------------------------+  +------------------------+
+| src/data_loader.py   |   | _load_or_create_       |  | _load_or_create_       |
+| fetch + clean docs   |-->| embeddings (npy)       |->| vector_store (faiss)   |
+| via preprocessing.py |   | via embeddings.py      |  | via vector_store.py    |
++----------+-----------+   +-----------+------------+  +-----------+------------+
+           |                           |                           |
+           +---------------------------+---------------------------+
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | _load_or_create_clusters          |
+                     | via clustering.py (GMM + probs)   |
+                     +----------------+------------------+
+                                      |
+                                      v
+                           APP READY FOR REQUESTS
+                                      |
+                                      v
+                         POST /query endpoint called
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | search_engine.query(query_text)   |
+                     +----------------+------------------+
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | embeddings.py encode(query)       |
+                     +----------------+------------------+
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | clustering.py predict_cluster     |
+                     +----------------+------------------+
+                                      |
+                                      v
+                     +-----------------------------------+
+                     | semantic_cache.py get(...)        |
+                     | lookup only inside same cluster   |
+                     +------------+----------------------+
+                                  |
+                    +-------------+-------------+
+                    |                           |
+                  CACHE HIT                  CACHE MISS
+                    |                           |
+                    v                           v
+       return cached result         vector_store.py search(top_k)
+                                             |
+                                             v
+                                 format result + cache.put(...)
+                                             |
+                                             v
+                                  return API JSON response
+```
+
 ## Startup Lifecycle
 
 Executed once during FastAPI startup:
