@@ -84,8 +84,14 @@ class SearchEngine:
     def _load_or_create_vector_store(self, embeddings, documents: pd.DataFrame) -> None:
         if self.settings.faiss_index_path.exists() and self.settings.metadata_path.exists():
             logger.info("Loading FAISS artifacts from disk")
-            self.vector_store.load(self.settings.faiss_index_path, self.settings.metadata_path)
-            return
+            try:
+                self.vector_store.load(self.settings.faiss_index_path, self.settings.metadata_path)
+                return
+            except Exception as exc:
+                logger.warning(
+                    "Failed to load existing vector artifacts (%s). Rebuilding index and metadata.",
+                    exc,
+                )
 
         # Build once and persist; warm restarts can skip index construction.
         logger.info("Building FAISS index")

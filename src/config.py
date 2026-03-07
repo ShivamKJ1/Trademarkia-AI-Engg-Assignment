@@ -46,7 +46,7 @@ class Settings:
     @property
     def metadata_path(self) -> Path:
         """Path for metadata aligned with FAISS vector order."""
-        return self.artifact_dir / "documents.pkl"
+        return self.artifact_dir / "documents.csv"
 
     @property
     def faiss_index_path(self) -> Path:

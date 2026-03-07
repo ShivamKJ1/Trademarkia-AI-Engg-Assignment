@@ -309,6 +309,52 @@ docker compose up --build
 
 Service is exposed on port `8000` by default in container config.
 
+## Containerized API Demo (PowerShell)
+
+Use this exact flow to demonstrate Dockerized FastAPI end-to-end.
+
+1. Start containerized service:
+
+```powershell
+docker compose up --build
+```
+
+2. In a second terminal, verify API is reachable:
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/cache/stats" -Method Get | ConvertTo-Json
+```
+
+3. First query (typically cache miss):
+
+```powershell
+$body1 = @{ query = "How can I install Linux on my PC?" } | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/query" -Method Post -ContentType "application/json" -Body $body1 | ConvertTo-Json -Depth 5
+```
+
+4. Similar query (tests semantic cache behavior):
+
+```powershell
+$body2 = @{ query = "How do I install Linux on my computer?" } | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/query" -Method Post -ContentType "application/json" -Body $body2 | ConvertTo-Json -Depth 5
+```
+
+5. Check cache metrics:
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/cache/stats" -Method Get | ConvertTo-Json
+```
+
+6. Clear cache and verify reset:
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/cache" -Method Delete | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/cache/stats" -Method Get | ConvertTo-Json
+```
+
+7. Swagger docs from container:
+- `http://127.0.0.1:8000/docs`
+
 ## Configuration
 
 Tune behavior from `.env`:

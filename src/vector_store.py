@@ -32,11 +32,12 @@ class VectorStore:
         if self.index is None or self.metadata is None:
             raise ValueError("Vector store not initialized.")
         faiss.write_index(self.index, str(index_path))
-        self.metadata.to_pickle(metadata_path)
+        # CSV is cross-version stable; pickle can break between pandas versions.
+        self.metadata.to_csv(metadata_path, index=False)
 
     def load(self, index_path: Path, metadata_path: Path) -> None:
         self.index = faiss.read_index(str(index_path))
-        self.metadata = pd.read_pickle(metadata_path)
+        self.metadata = pd.read_csv(metadata_path)
         logger.info("Loaded FAISS index and metadata from disk")
 
     def search(self, query_embedding: np.ndarray, top_k: int = 5) -> list[dict]:
